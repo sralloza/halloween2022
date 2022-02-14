@@ -1,110 +1,73 @@
-#include <SoftwareSerial.h>
+const int relay1 = 30;
+const int relay2 = 31;
+const int input = 8;
 
-// https://github.com/DFRobot/DFRobotDFPlayerMini
-#include "DFRobotDFPlayerMini.h"
+const int delayPistonUpMS = 3000;
+const int delayPistonDownMS = 3000;
+const int delayPistonKeepUpMS = 5000;
 
-// TODO: set up RX and TX pins: Serial1(RX, TX);
-SoftwareSerial Serial1(0, 0);
-DFRobotDFPlayerMini myDFPlayer;
-void printDetail(uint8_t type, int value);
+const bool RELAY_ACTIVATION_HIGH = false;
 
-// https://github.com/DFRobot/DFRobotDFPlayerMini/blob/master/examples/AdvancedSettingViaSerial1/AdvancedSettingViaSerial1.ino
+void setRelayON(int relayPin)
+{
+    if (RELAY_ACTIVATION_HIGH == true)
+    {
+        digitalWrite(relayPin, HIGH);
+    }
+    else
+    {
+        digitalWrite(relayPin, LOW);
+    }
+}
+
+void setRelayOFF(int relayPin)
+{
+    if (RELAY_ACTIVATION_HIGH == true)
+    {
+        digitalWrite(relayPin, LOW);
+    }
+    else
+    {
+        digitalWrite(relayPin, HIGH);
+    }
+}
 
 void setup()
 {
-  Serial1.begin(9600);
-  Serial.begin(115200);
+    Serial.begin(9600);
+    Serial.println("Starting...");
 
-  Serial.println();
-  Serial.println(F("DFRobot DFPlayer Mini Demo"));
-  Serial.println(F("Initializing DFPlayer ... (May take 3~5 seconds)"));
+    pinMode(relay1, OUTPUT);
+    pinMode(relay2, OUTPUT);
+    pinMode(input, INPUT);
 
-  if (!myDFPlayer.begin(Serial1)) {  //Use softwareSerial to communicate with mp3.
-    Serial.println(F("Unable to begin:"));
-    Serial.println(F("1.Please recheck the connection!"));
-    Serial.println(F("2.Please insert the SD card!"));
-    while(true){
-      delay(0); // Code to compatible with ESP8266 watch dog.
-    }
-  }
-  Serial.println(F("DFPlayer Mini online."));
+    setRelayOFF(relay1);
+    setRelayOFF(relay2);
 
-  myDFPlayer.volume(10);  //Set volume value. From 0 to 30
-  myDFPlayer.play(1);  //Play the first mp3
+    Serial.println("Setup ended");
 }
 
 void loop()
 {
-  static unsigned long timer = millis();
+    if (digitalRead(input) == HIGH)
+    {
+        Serial.println("Starting loop");
 
-  if (millis() - timer > 3000) {
-    timer = millis();
-    myDFPlayer.next();  //Play next mp3 every 3 second.
-  }
+        Serial.println("Piston moving UP");
+        setRelayON(relay2);
+        delay(delayPistonUpMS);
+        setRelayOFF(relay2);
+        Serial.println("Piston UP");
 
-  if (myDFPlayer.available()) {
-    printDetail(myDFPlayer.readType(), myDFPlayer.read()); //Print the detail message from DFPlayer to handle different errors and states.
-  }
-}
+        Serial.println("Waiting");
+        delay(delayPistonKeepUpMS);
 
-void printDetail(uint8_t type, int value){
-  switch (type) {
-    case TimeOut:
-      Serial.println(F("Time Out!"));
-      break;
-    case WrongStack:
-      Serial.println(F("Stack Wrong!"));
-      break;
-    case DFPlayerCardInserted:
-      Serial.println(F("Card Inserted!"));
-      break;
-    case DFPlayerCardRemoved:
-      Serial.println(F("Card Removed!"));
-      break;
-    case DFPlayerCardOnline:
-      Serial.println(F("Card Online!"));
-      break;
-    case DFPlayerUSBInserted:
-      Serial.println("USB Inserted!");
-      break;
-    case DFPlayerUSBRemoved:
-      Serial.println("USB Removed!");
-      break;
-    case DFPlayerPlayFinished:
-      Serial.print(F("Number:"));
-      Serial.print(value);
-      Serial.println(F(" Play Finished!"));
-      break;
-    case DFPlayerError:
-      Serial.print(F("DFPlayerError:"));
-      switch (value) {
-        case Busy:
-          Serial.println(F("Card not found"));
-          break;
-        case Sleeping:
-          Serial.println(F("Sleeping"));
-          break;
-        case SerialWrongStack:
-          Serial.println(F("Get Wrong Stack"));
-          break;
-        case CheckSumNotMatch:
-          Serial.println(F("Check Sum Not Match"));
-          break;
-        case FileIndexOut:
-          Serial.println(F("File Index Out of Bound"));
-          break;
-        case FileMismatch:
-          Serial.println(F("Cannot Find File"));
-          break;
-        case Advertise:
-          Serial.println(F("In Advertise"));
-          break;
-        default:
-          break;
-      }
-      break;
-    default:
-      break;
-  }
+        Serial.println("Piston moving Down");
+        setRelayON(relay1);
+        delay(delayPistonDownMS);
+        setRelayOFF(relay1);
+        Serial.println("Piston Down");
 
+        Serial.println("Loop ended\n");
+    }
 }
