@@ -8,25 +8,17 @@ const bool RELAY_ACTIVATION_HIGH = true;
 void setRelayON(int RELAY_PIN)
 {
     if (RELAY_ACTIVATION_HIGH == true)
-    {
         digitalWrite(RELAY_PIN, HIGH);
-    }
     else
-    {
         digitalWrite(RELAY_PIN, LOW);
-    }
 }
 
 void setRelayOFF(int RELAY_PIN)
 {
     if (RELAY_ACTIVATION_HIGH == true)
-    {
         digitalWrite(RELAY_PIN, LOW);
-    }
     else
-    {
         digitalWrite(RELAY_PIN, HIGH);
-    }
 }
 
 
@@ -42,7 +34,6 @@ void setup()
 
 void loop()
 {
-    Serial.write(digitalRead(INPUT_PIN));
     if (digitalRead(INPUT_PIN) == HIGH)
     {
         Serial.write("Starting loop\n");
