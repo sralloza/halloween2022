@@ -1,4 +1,5 @@
-const int relayPin = 14;
+// Pins are setup for Arduino Nano
+const int relayPin = 10;
 const int inputPin = 12;
 const int delayms = 3000;
 
