@@ -5,6 +5,7 @@ const int DELAY_MS = 60000;
 
 const bool RELAY_ACTIVATION_HIGH = true;
 
+
 void setRelayON(int RELAY_PIN)
 {
     if (RELAY_ACTIVATION_HIGH == true)
