@@ -1,10 +1,10 @@
-const int relay1 = 30;
-const int relay2 = 31;
-const int input = 8;
+const int RELAY_1_PIN = 8;
+const int RELAY_2_PIN = 10;
+const int INPUT_PIN = 12;
 
-const int delayPistonUpMS = 3000;
-const int delayPistonDownMS = 3000;
-const int delayPistonKeepUpMS = 5000;
+const int DELAY_PISTON_UP_MS = 3000;
+const int DELAY_PISTON_DOWN_MS = 3000;
+const int DELAY_PISTON_KEEP_UP_MS = 5000;
 
 const bool RELAY_ACTIVATION_HIGH = false;
 
@@ -37,35 +37,35 @@ void setup()
     Serial.begin(9600);
     Serial.println("Starting...");
 
-    pinMode(relay1, OUTPUT);
-    pinMode(relay2, OUTPUT);
-    pinMode(input, INPUT);
+    pinMode(RELAY_1_PIN, OUTPUT);
+    pinMode(RELAY_2_PIN, OUTPUT);
+    pinMode(INPUT_PIN, INPUT);
 
-    setRelayOFF(relay1);
-    setRelayOFF(relay2);
+    setRelayOFF(RELAY_1_PIN);
+    setRelayOFF(RELAY_2_PIN);
 
     Serial.println("Setup ended");
 }
 
 void loop()
 {
-    if (digitalRead(input) == HIGH)
+    if (digitalRead(INPUT_PIN) == HIGH)
     {
         Serial.println("Starting loop");
 
         Serial.println("Piston moving UP");
-        setRelayON(relay2);
-        delay(delayPistonUpMS);
-        setRelayOFF(relay2);
+        setRelayON(RELAY_2_PIN);
+        delay(DELAY_PISTON_UP_MS);
+        setRelayOFF(RELAY_2_PIN);
         Serial.println("Piston UP");
 
         Serial.println("Waiting");
-        delay(delayPistonKeepUpMS);
+        delay(DELAY_PISTON_KEEP_UP_MS);
 
         Serial.println("Piston moving Down");
-        setRelayON(relay1);
-        delay(delayPistonDownMS);
-        setRelayOFF(relay1);
+        setRelayON(RELAY_1_PIN);
+        delay(DELAY_PISTON_DOWN_MS);
+        setRelayOFF(RELAY_1_PIN);
         Serial.println("Piston Down");
 
         Serial.println("Loop ended\n");
