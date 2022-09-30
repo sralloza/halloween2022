@@ -1,34 +1,26 @@
 // Pins are setup for Arduino Nano
 const int RELAY_PIN = 10;
 const int INPUT_PIN = 12;
-const int DELAY_MS = 60000;
+const int DELAY_MS = 30000;
 
 const bool RELAY_ACTIVATION_HIGH = true;
+
 
 void setRelayON(int RELAY_PIN)
 {
     if (RELAY_ACTIVATION_HIGH == true)
-    {
         digitalWrite(RELAY_PIN, HIGH);
-    }
     else
-    {
         digitalWrite(RELAY_PIN, LOW);
-    }
 }
 
 void setRelayOFF(int RELAY_PIN)
 {
     if (RELAY_ACTIVATION_HIGH == true)
-    {
         digitalWrite(RELAY_PIN, LOW);
-    }
     else
-    {
         digitalWrite(RELAY_PIN, HIGH);
-    }
 }
-
 
 void setup()
 {
@@ -42,10 +34,11 @@ void setup()
 
 void loop()
 {
-    Serial.write(digitalRead(INPUT_PIN));
+    char delayStr[30] = "";
+    sprintf(delayStr, "Starting loop: %d ms\n", DELAY_MS);
     if (digitalRead(INPUT_PIN) == HIGH)
     {
-        Serial.write("Starting loop\n");
+        Serial.write(delayStr);
         setRelayON(RELAY_PIN);
         delay(DELAY_MS);
         setRelayOFF(RELAY_PIN);
