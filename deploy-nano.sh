@@ -9,6 +9,9 @@ if [ -z "$PORT" ]; then
   exit 1
 fi
 
+echo "+Compiling $CIRCUIT"
 arduino-cli compile --fqbn arduino:avr:nano $1
+echo "+Uploading $CIRCUIT"
 arduino-cli upload -p $PORT --fqbn arduino:avr:nano $1
+echo "+Done, listening to serial port"
 arduino-cli monitor -p $PORT
